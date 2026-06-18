@@ -1,0 +1,1 @@
+<?php echo password_hash('auto123', PASSWORD_BCRYPT); ?>
