@@ -623,7 +623,15 @@ $result = $conn->query($sql);
         }
 
         /* ── Mobile and Tablet Specific Styling (768px and smaller) ── */
+        /* ── Mobile and Tablet Specific Styling (768px and smaller) ── */
         @media (max-width: 768px) {
+            
+            /* Keeps the single gold baseline line right under Premium Auto text/button */
+            header, 
+            header.header-transparent {
+                border-bottom: 1px solid var(--gold, #d4af37) !important;
+            }
+
             .nav-toggle-btn {
                 display: flex; /* Show the 2 lines button on small screens */
             }
@@ -643,32 +651,39 @@ $result = $conn->query($sql);
                 left: 0;
                 width: 100%;
                 background: rgba(15, 15, 15, 0.98); 
-                border-bottom: 2px solid var(--gold, #d4af37);
-                flex-direction: column;
+                border-bottom: none !important; /* Removes layout double border lines */
+                
+                /* FORCE VERTICAL ROWS */
+                display: flex !important;         
+                flex-direction: column !important; /* Pushes CARS, Location, Login into new rows */
                 align-items: center;
                 gap: 0;
-                padding: 0;
+                padding: 0 !important; /* Strips container spacing uneven boxes */
                 
                 max-height: 0;
                 overflow: hidden;
-                transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease;
+                transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             }
 
-            /* Active class triggered by JavaScript to drop down smoothly */
+            /* When the menu pulls down successfully */
             header .nav-links.open {
-                max-height: 220px; /* Slides open to full view */
-                padding: 15px 0;
+                max-height: 220px; 
+                padding: 0 !important;
             }
 
+            /* Make each link button identical, centered, and balanced */
             header .nav-links a {
                 width: 100%;
                 text-align: center;
-                padding: 14px 0;
                 font-size: 1.1rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+                margin: 0 !important; /* Strips out desktop side-spacing margins */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Soft divider lines between items */
+                padding: 18px 0 !important; /* Forces pixel-perfect identical row boxes */
+                box-sizing: border-box !important;
             }
+
             header .nav-links a:last-child {
-                border-bottom: none;
+                border-bottom: none; /* Removes the bottom boundary divider line on Login */
             }
         }
     </style>
