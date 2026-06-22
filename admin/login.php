@@ -137,8 +137,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 0.5rem;
         }
 
-        .btn-login:hover  { background: var(--gold-hover); }
-        .btn-login:active { transform: scale(0.98); }
+        .btn-login:hover  { 
+            background: var(--gold-hover);
+            transform: scale(1.03);
+        }
+        .btn-login:active { 
+            transform: scale(0.98); 
+        }
 
         .error-msg {
             background: rgba(231, 76, 60, 0.15);

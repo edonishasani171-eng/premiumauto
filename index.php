@@ -587,16 +587,109 @@ $result = $conn->query($sql);
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ── Responsive Header Layout & Mobile Pull-Down ── */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px 20px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Base styles for the 2-line menu button - hidden on desktop */
+        .nav-toggle-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            width: 30px;
+            height: 18px; /* Lowered height so the spans stay closely tied and don't push the layout box down */
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-between; /* Evenly spaces the 2 lines within the 18px box */
+            padding: 0;
+            z-index: 2100;
+        }
+
+        .nav-toggle-btn span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--gold, #d4af37);
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* ── Mobile and Tablet Specific Styling (768px and smaller) ── */
+        @media (max-width: 768px) {
+            .nav-toggle-btn {
+                display: flex; /* Show the 2 lines button on small screens */
+            }
+
+            /* 2-Line Toggle Animation into X */
+            .nav-toggle-btn.menu-is-open span:nth-child(1) {
+                transform: translateY(7.5px) rotate(45deg);
+            }
+            .nav-toggle-btn.menu-is-open span:nth-child(2) {
+                transform: translateY(-7.5px) rotate(-45deg);
+            }
+
+            /* Turn nav-links into a clean pull-down menu */
+            header .nav-links {
+                position: absolute;
+                top: 100%; 
+                left: 0;
+                width: 100%;
+                background: rgba(15, 15, 15, 0.98); 
+                border-bottom: 2px solid var(--gold, #d4af37);
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+                padding: 0;
+                
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease;
+            }
+
+            /* Active class triggered by JavaScript to drop down smoothly */
+            header .nav-links.open {
+                max-height: 220px; /* Slides open to full view */
+                padding: 15px 0;
+            }
+
+            header .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 14px 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            }
+            header .nav-links a:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo"><a href="index.php">Premium Auto</a></div>
-    <nav class="nav-links">
-        <a href="#inventory-section" class="nav-item">CARS</a>
-        <a href="index.php">Location</a>
-    </nav>
+<header class="header-transparent">
+    <div class="navbar-container">
+        <div class="logo"><a href="index.php">Premium Auto</a></div>
+        
+        <button class="nav-toggle-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav-links">
+            <a href="#inventory-section" class="nav-item">CARS</a>
+            <a href="index.php" class="nav-item">Location</a>
+            <a href="admin/login.php" class="nav-item">Login</a>
+        </nav>
+    </div>
 </header>
 
 <section class="hero" style="position:relative; overflow:hidden; margin: top 7.5rem;">
@@ -1279,6 +1372,29 @@ nextPlayer.load();
 
 // Run the engine
 setupVideoTransition(activePlayer, nextPlayer);
+
+// Function to handle opening/closing the mobile pull-down menu
+function toggleMobileMenu() {
+    const navLinks = document.querySelector('header .nav-links');
+    const toggleBtn = document.querySelector('.nav-toggle-btn');
+
+    // Smoothly expand/collapse menu height
+    navLinks.classList.toggle('open');
+    
+    // Animate the 2 custom lines into an X icon
+    toggleBtn.classList.toggle('menu-is-open');
+}
+
+// Auto-closes the navigation list when a menu item is clicked
+document.querySelectorAll('header .nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        const navLinks = document.querySelector('header .nav-links');
+        const toggleBtn = document.querySelector('.nav-toggle-btn');
+        
+        navLinks.classList.remove('open');
+        toggleBtn.classList.remove('menu-is-open');
+    });
+});
 </script>
 </body>
 </html>

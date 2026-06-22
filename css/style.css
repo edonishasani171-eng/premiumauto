@@ -30,7 +30,6 @@ html {
 header {
     background-color: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--gold);
     padding: 1rem 2rem;
     position: fixed; /* Changed from sticky to fixed to overlay beautifully */
     top: 0;

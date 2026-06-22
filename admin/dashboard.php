@@ -1004,6 +1004,224 @@ $total_pages = ceil($total_filtered / $per_page);
             margin-top: 4px;
             border-color: #2a2a2a;
         }
+
+        /* ==========================
+        MOBILE SIDEBAR
+        ========================== */
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+
+            width: 50px;
+            height: 50px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: var(--gold);
+            cursor: pointer;
+
+            transition: all .35s ease;
+        }
+        .mobile-menu-btn.open {
+            left: 275px;
+        }
+
+        .mobile-menu-btn span {
+            width: 24px;
+            height: 3px;
+            background: #000;
+            border-radius: 5px;
+
+            transition: .35s ease;
+        }
+        .mobile-menu-btn.open span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.open span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        .sidebar .nav-item {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all .3s ease;
+        }
+
+        .sidebar.open .nav-item {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .sidebar.open .nav-item:nth-child(1) {
+            transition-delay: .05s;
+        }
+
+        .sidebar.open .nav-item:nth-child(2) {
+            transition-delay: .10s;
+        }
+
+        .sidebar.open .nav-item:nth-child(3) {
+            transition-delay: .15s;
+        }
+
+        .sidebar.open .nav-item:nth-child(4) {
+            transition-delay: .20s;
+        }
+        /* Mobile Toggle Button Base Styles */
+        .toggle-btn {
+            display: none; 
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #ffcc00; /* Your yellow accent theme */
+            border: none;
+            width: 45px;
+            height: 42px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1100;
+            transition: left 0.3s ease-in-out;
+            
+            /* Flexbox layout to space out the 2 lines */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px; /* Controls the space between the 2 lines */
+            padding: 10px;
+        }
+
+        /* Style for the 2 lines */
+        .toggle-btn span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #111;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out; /* Smooth morphing */
+        }
+
+        /* 2. MOBILE ONLY STYLES */
+        @media (max-width: 900px) {
+            .toggle-btn {
+                display: flex; 
+            }
+
+            /* Move the button to the right over the menu list when open */
+            .toggle-btn.sidebar-is-open {
+                left: 255px; 
+            }
+
+            /* 2-LINE ANIMATION LOGIC: Morph into an X */
+            
+            /* Top line: Move down slightly and rotate 45 degrees */
+            .toggle-btn.sidebar-is-open span:nth-child(1) {
+                transform: translateY(4px) rotate(45deg);
+            }
+
+            /* Bottom line: Move up slightly and rotate -45 degrees */
+            .toggle-btn.sidebar-is-open span:nth-child(2) {
+                transform: translateY(-4px) rotate(-45deg);
+            }
+        }
+
+        /* Hide on desktop sizes explicitly */
+        @media (min-width: 901px) {
+            .toggle-btn {
+                display: none !important;
+            }
+        }
+
+        /* Ensure the main content doesn't break responsively when sidebar shifts */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 240px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.7);
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition: .3s;
+            z-index: 199;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+            transform: translateX(-100%);
+            transition:
+            transform .4s cubic-bezier(.22,1,.36,1);
+        }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 70px 15px 15px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-body {
+                padding: 1rem;
+            }
+
+            .cars-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1057,6 +1275,8 @@ $total_pages = ceil($total_filtered / $per_page);
 </div>
 <?php endif; ?>
 
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <div class="dash-wrapper">
 
     <!-- ── Sidebar ── -->
@@ -1104,6 +1324,11 @@ $total_pages = ceil($total_filtered / $per_page);
 
     <!-- ── Main ── -->
     <main class="main-content">
+
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+        </button>
 
         <div class="topbar">
             <div class="page-title"><span class="title-slide-left">Dashboard</span> <span class="slash-static">/</span> <span id="section-label" class="title-slide-right">Overview</span></div>
@@ -1536,6 +1761,19 @@ function showSection(id, el) {
         label.offsetHeight; // force reflow to restart animation
         label.style.animation = '';
     }
+    if (window.event && window.event.type === 'click') {
+        window.event.preventDefault();
+    }
+    if (window.innerWidth <= 768) {
+    document
+        .querySelector('.sidebar')
+        .classList.remove('open');
+
+    document
+        .querySelector('.sidebar-overlay')
+        .classList.remove('active');
+    }
+
     if (window.event && window.event.type === 'click') {
         window.event.preventDefault();
     }
@@ -2030,6 +2268,34 @@ function updateOptionsPlaceholder() {
     ph.textContent = selectedOptions.length > 0 ? selectedOptions.length + ' option(s) selected' : 'Click to select options...';
     ph.style.color = selectedOptions.length > 0 ? '#ccc' : '#555';
 }
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const toggleBtn = document.querySelector('.toggle-btn');
+
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    
+    // Smoothly shift the button to the right when open
+    if (toggleBtn) {
+        toggleBtn.classList.toggle('sidebar-is-open');
+    }
+}
+
+// Auto-close menu and reset button when clicking a link
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        if (toggleBtn) {
+            toggleBtn.classList.remove('sidebar-is-open');
+        }
+    });
+});
 </script>
 </body>
 </html>
