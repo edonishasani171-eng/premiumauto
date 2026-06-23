@@ -24,13 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $admin  = $result->fetch_assoc();
         $stmt->close();
 
-        // DEBUG - remove after fixing
-        echo "Found user: " . ($admin ? $admin['username'] : 'NONE') . "<br>";
-        echo "Password received: [" . $password . "]<br>";
-        echo "Hash in DB: " . $admin['password_hash'] . "<br>";
-        echo "Verify: " . ($admin ? (password_verify($password, $admin['password_hash']) ? 'TRUE' : 'FALSE') : 'N/A') . "<br>";
-        exit;
-
         if ($admin && password_verify($password, $admin['password_hash'])) {
             $_SESSION['admin_id']       = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
