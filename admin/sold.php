@@ -1,4 +1,6 @@
 <?php
+require_once '../db_connect.php';
+session_start();
 require_once 'auth_guard.php';
 
 $id = (int)($_GET['id'] ?? 0);

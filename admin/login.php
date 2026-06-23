@@ -1,4 +1,5 @@
 <?php
+require_once '../db_connect.php';
 session_start();
 
 // If already logged in, go to dashboard
@@ -6,8 +7,6 @@ if (isset($_SESSION['admin_id'])) {
     header('Location: dashboard.php');
     exit;
 }
-
-require_once '../db_connect.php';
 
 $error = '';
 
