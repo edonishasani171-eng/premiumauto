@@ -20,15 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("SELECT id, username, password_hash FROM admins WHERE username = ?");
         $stmt->bind_param('s', $username);
         $stmt->execute();
-        // DEBUG - remove after fixing
-        $result2 = $conn->query("SELECT username, password_hash FROM admins WHERE username = 'admin'");
-        $row = $result2->fetch_assoc();
-        echo "DB hash: " . $row['password_hash'] . "<br>";
-        echo "Verify result: " . (password_verify('admin123', $row['password_hash']) ? 'TRUE' : 'FALSE') . "<br>";
-        exit;
         $result = $stmt->get_result();
         $admin  = $result->fetch_assoc();
         $stmt->close();
+
+        // DEBUG - remove after fixing
+        echo "Found user: " . ($admin ? $admin['username'] : 'NONE') . "<br>";
+        echo "Verify: " . ($admin ? (password_verify($password, $admin['password_hash']) ? 'TRUE' : 'FALSE') : 'N/A') . "<br>";
+        exit;
 
         if ($admin && password_verify($password, $admin['password_hash'])) {
             $_SESSION['admin_id']       = $admin['id'];
