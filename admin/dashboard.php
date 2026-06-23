@@ -1,4 +1,7 @@
 <?php
+session_start();
+var_dump($_SESSION);
+exit;
 require_once 'auth_guard.php';
 
 $success = '';
